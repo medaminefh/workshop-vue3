@@ -1,3 +1,33 @@
+<script setup lang="ts">
+import axios from "axios";
+import orderBy from "lodash/orderBy";
+import { computed, ref } from "vue";
+
+const characters = ref([]);
+const loadingState = ref(null);
+const orderKey = ref("id");
+
+const charactersOrdered = computed(() => {
+  return orderBy(characters.value, orderKey.value);
+});
+
+const setOrderKey = (key) => {
+  orderKey.value = key;
+};
+
+const fetchAllCharacters = () => {
+  loadingState.value = "loading";
+  axios.get("https://rickandmortyapi.com/api/character").then((response) => {
+    setTimeout(() => {
+      loadingState.value = "success";
+      characters.value = response.data.results;
+    }, 1000);
+  });
+};
+
+fetchAllCharacters();
+</script>
+
 <template>
   <div>
     <div class="border-b-2 pb-4 border-gray-300 text-center">
@@ -39,36 +69,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import axios from "axios";
-import orderBy from "lodash/orderBy";
-import { computed, ref } from "vue";
-
-const characters = ref([]);
-const loadingState = ref(null);
-const orderKey = ref("id");
-
-const charactersOrdered = computed(() => {
-  return orderBy(characters.value, orderKey.value);
-});
-
-const setOrderKey = (key) => {
-  orderKey.value = key;
-};
-
-const fetchAllCharacters = () => {
-  loadingState.value = "loading";
-  axios.get("https://rickandmortyapi.com/api/character").then((response) => {
-    setTimeout(() => {
-      loadingState.value = "success";
-      characters.value = response.data.results;
-    }, 1000);
-  });
-};
-
-fetchAllCharacters();
-</script>
 
 <style scoped>
 .btn {
