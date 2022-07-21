@@ -1,10 +1,8 @@
-<script setup lang="ts">
-import axios from "axios";
+<script setup>
+import { useFetchResource } from "@/composables/helpers";
 import orderBy from "lodash/orderBy";
 import { computed, ref } from "vue";
 
-const characters = ref([]);
-const loadingState = ref(null);
 const orderKey = ref("id");
 
 const charactersOrdered = computed(() => {
@@ -15,17 +13,22 @@ const setOrderKey = (key) => {
   orderKey.value = key;
 };
 
-const fetchAllCharacters = () => {
-  loadingState.value = "loading";
-  axios.get("https://rickandmortyapi.com/api/character").then((response) => {
-    setTimeout(() => {
-      loadingState.value = "success";
-      characters.value = response.data.results;
-    }, 1000);
-  });
-};
+const {
+  data: characters,
+  loadingState,
+  fetchRessources: fetchAllCharacters,
+} = useFetchResource("https://rickandmortyapi.com/api/character");
 
 fetchAllCharacters();
+
+const {
+  data: locations,
+  loadingState: loadingLocations,
+  fetchRessources: fetchLocations,
+} = useFetchResource("https://rickandmortyapi.com/api/location");
+
+fetchLocations();
+console.log(locations, loadingLocations);
 </script>
 
 <template>

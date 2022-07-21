@@ -1,5 +1,8 @@
 <script setup>
 import CharacterCards from "@/components/CharacterCards.vue";
+defineProps({
+  msg: String,
+});
 </script>
 
 <template>
